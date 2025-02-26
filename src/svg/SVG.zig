@@ -8,7 +8,7 @@ pub const Polyline = @import("Polyline.zig");
 pub const Text = @import("Text.zig");
 pub const Path = @import("Path.zig");
 
-pub usingnamespace @import("kind.zig");
+pub const Kind = @import("kind.zig").Kind;
 
 const SVG = @This();
 

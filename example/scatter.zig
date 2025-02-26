@@ -13,8 +13,8 @@ pub fn main() !void {
     var gpa = std.heap.GeneralPurposeAllocator(.{}){};
     defer _ = gpa.deinit();
     const allocator = gpa.allocator();
-    
-    var xoshiro = std.rand.Xoshiro256.init(100);
+
+    var xoshiro = std.Random.Xoshiro256.init(100);
     var rand = xoshiro.random();
 
     var x: [28]f32 = undefined;
@@ -27,35 +27,16 @@ pub fn main() !void {
         y2[i] = x[i] + r * 2.0 - 1.0;
     }
 
-    var figure = Figure.init(allocator, .{
-        .value_padding = .{
-            .x_min = .{ .value = 1.0 },
-            .x_max = .{ .value = 1.0 },
-        },
-        .axis = .{
-            .show_y_axis = false,
-        }
-    });
+    var figure = Figure.init(allocator, .{ .value_padding = .{
+        .x_min = .{ .value = 1.0 },
+        .x_max = .{ .value = 1.0 },
+    }, .axis = .{
+        .show_y_axis = false,
+    } });
     defer figure.deinit();
 
-    try figure.addPlot(Scatter {
-        .x = &x,
-        .y = &y1,
-        .style = .{
-            .color = rgb.BLUE,
-            .radius = 4.0,
-            .shape = .circle
-        }
-    });
-    try figure.addPlot(Scatter {
-        .x = &x,
-        .y = &y2,
-        .style = .{
-            .color = rgb.RED,
-            .radius = 4.0,
-            .shape = .rhombus
-        }
-    });
+    try figure.addPlot(Scatter{ .x = &x, .y = &y1, .style = .{ .color = rgb.BLUE, .radius = 4.0, .shape = .circle } });
+    try figure.addPlot(Scatter{ .x = &x, .y = &y2, .style = .{ .color = rgb.RED, .radius = 4.0, .shape = .rhombus } });
 
     var svg = try figure.show();
     defer svg.deinit();
